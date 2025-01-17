@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Performance Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Healthcare Performance Dashboard</h1>
+
+    <!-- File Upload -->
+    <label for="fileUpload">Upload JSON File:</label>
+    <input type="file" id="fileUpload" accept="application/json">
+
+    <!-- Visualizations -->
+    <div id="revenueByAdmission" style="width: 100%; height: 400px;"></div>
+    <div id="revenueByInsurance" style="width: 100%; height: 400px;"></div>
+    <div id="avgBillingByCondition" style="width: 100%; height: 400px;"></div>
+    <div id="lengthOfStayBilling" style="width: 100%; height: 400px;"></div>
+    <div id="revenueByRoom" style="width: 100%; height: 400px;"></div>
+
+    <script>
+        document.getElementById('fileUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = JSON.parse(e.target.result);
+                    generateDashboard(data);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function generateDashboard(data) {
+            // Revenue by Admission Type
+            const admissionTypes = [data.AdmissionType];
+            const billingAmounts = [data.BillingAmount];
+            Plotly.newPlot('revenueByAdmission', [{
+                x: admissionTypes,
+                y: billingAmounts,
+                type: 'bar',
+                marker: {color: 'blue'}
+            }], {
+                title: 'Revenue by Admission Type',
+                xaxis: { title: 'Admission Type' },
+                yaxis: { title: 'Total Revenue ($)' }
+            });
+
+            // Additional visualizations can be implemented here.
+        }
+    </script>
+</body>
+</html>
